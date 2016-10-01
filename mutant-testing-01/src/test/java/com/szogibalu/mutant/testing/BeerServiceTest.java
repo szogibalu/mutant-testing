@@ -1,9 +1,11 @@
 package com.szogibalu.mutant.testing;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.fail;
 
 import org.junit.Before;
 import org.junit.Test;
+
 
 public class BeerServiceTest {
 
@@ -13,26 +15,41 @@ public class BeerServiceTest {
 	public void init() {
 		systemUnderTest = new BeerService();
 	}
+	
+	
+	@Test(expected = IllegalArgumentException.class)
+	public void shouldReturnWithErrorWhenZeroGlassOfBeerWasOrdered() {
+		systemUnderTest.getPrice(0, false);
 
-	@Test
-	public void shouldCalculateWithNormalPriceWhenOneGlassOfBeerWasOrdered() {
-		double price = systemUnderTest.serve(1, false);
+		fail();
+	}
+	
+	@Test(expected = IllegalArgumentException.class)
+	public void shouldReturnWithErrorWhenMoreThanHundredlassesOfBeerWasOrdered() {
+		systemUnderTest.getPrice(100, false);
 
-		assertThat(price).isEqualTo(4.0);
+		fail();
 	}
 
 	@Test
-	public void shouldCalculateWithSpecialPriceWhenOneGlassOfBeerWasOrderedWithBonus() {
-		double price = systemUnderTest.serve(1, true);
+	public void shouldReturnWithNormalPriceWhenOneGlassOfBeerWasOrdered() {
+		double price = systemUnderTest.getPrice(1, false);
 
-		assertThat(price).isEqualTo(3.5);
+		assertThat(price).isEqualTo(800);
 	}
 
 	@Test
-	public void shouldCalculateWithSpecialPriceWhenFourGlassOfBeerWasOrdered() {
-		double price = systemUnderTest.serve(4, true);
+	public void shouldReturnWithSpecialPriceWhenOneGlassOfBeerWasOrderedWithBonus() {
+		double price = systemUnderTest.getPrice(1, true);
 
-		assertThat(price).isEqualTo(3.5 * 4);
+		assertThat(price).isEqualTo(600);
+	}
+
+	@Test
+	public void shouldReturnWithSpecialPriceWhenFourGlassesOfBeerWasOrdered() {
+		double price = systemUnderTest.getPrice(4, true);
+
+		assertThat(price).isEqualTo(600);
 	}
 
 }

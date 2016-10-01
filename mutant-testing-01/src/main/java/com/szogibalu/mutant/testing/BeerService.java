@@ -7,17 +7,25 @@ public class BeerService {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(BeerService.class);
 
-	private static final double NORMAL_PRICE = 4;
+	private static final double NORMAL_PRICE = 800;
 
-	private static final double SPECIAL_PRICE = 3.5;
+	private static final double SPECIAL_PRICE = 600;
 
-	public double serve(int numberOfGlasses, boolean bonus) {
-		LOGGER.info("Serving {} glass(es) of beer with bonus[{}]", numberOfGlasses, bonus);
+	public double getPrice(int numberOfGlasses, boolean bonus) {
+		LOGGER.info("Get price for {} glass(es) of beer with bonus[{}]", numberOfGlasses, bonus);
+		
+		validate(numberOfGlasses);
 
 		if (numberOfGlasses >= 4 || bonus) {
-			return numberOfGlasses * SPECIAL_PRICE;
+			return  SPECIAL_PRICE;
 		} else {
-			return numberOfGlasses * NORMAL_PRICE;
+			return  NORMAL_PRICE;
+		}
+	}
+
+	private void validate(int numberOfGlasses) {
+		if(numberOfGlasses < 1 || numberOfGlasses >= 100) {
+			throw new IllegalArgumentException();			
 		}
 	}
 
